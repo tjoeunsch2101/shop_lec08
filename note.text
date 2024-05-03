@@ -1,0 +1,153 @@
+
+20240408
+
+ItemRepository  <-- JpaRepository <-- ListCrudRepository <-- CrudRepository
+
+조상 interface 로부터 상속받은 메소드들을 사용할 수 있음
+
+조상 interface 로부터 상속받은 메소드들
+
+<S extends T> save(S entity)  :  Entity 저장과 수정
+void delete(T entity)         :  Entity 삭제하기
+count()                       :  Entity 총 개수 반환하기
+Iterable<T> findAll()         :  모든 Entity 조회하기
+ 
+ 
+ 
+Query Method
+
+Repository Interface 에 정의된 naming rule을 사용해서
+추상 method 를 작성하면 Query 가 실행됨 
+
+ex)
+  find + (entity: 생략) + By + 검색할변수이름
+  
+  List<Item> findByItemName(String itemName);
+  List<Item> findByItemNameOrItemDetail(String itemName, String itemDetail);
+  
+  LessThan 조건 검색
+  List<Item> findByPriceLessThan(Integer price);
+
+
+20240409
+
+  LessThan 조건 검색 + OrderBy
+  List<Item> findByPriceLessThanOrderByPriceDesc(Integer price);
+
+
+  @Query 어노테이션
+    ㄴ JPQL(Java Persistence Query Language)
+       DB 의 table 을 대상으로 실행되는 query 문이 아니고
+       DB 의 table 과 mapping 된 entity 객체를 대상으로 실행되는 query 문임
+       
+       
+  @Query 어노테이션의 nativeQuery 속성을 사용해서 
+   일반 sql 문을 사용할 수 있음
+
+
+   Querydsl : JPQL 을 code 로 작성할 수 있도록 해 주는 Builder API
+              동적으로 query 문을 생성함
+              java code 로 작성함 <-- compile 시에 오류를 발견할 수 있음item 
+                
+   
+   
+20240411
+  shop_lec03
+  
+  Spring Security
+  
+  회원가입
+  로그인, 로그아웃
+  페이지 접근권한
+  
+  ORM(Object Relation(Relational) Mapping)
+  
+  MyBatis <-- Mapper
+  JPA     <-- JpaRepository interface 에서 제공하는 메소드 사용
+  
+  
+  
+  shop_lec04
+  
+  @Null  :  null 만 허용함
+  
+  @NotNull  :  null 을 허용하지 않음 - "", " " 는 허용함
+  @NotEmpty :  null, "", (비어있는 list) 을 허용하지 않음 - " " 는 허용함
+  @NotBlank :  null, "", " " 는 허용하지 않음
+  
+  
+  UserDetail interface
+    ㄴ Spring Security 에서 회원의 정보를 저장할 때 사용하는 interface
+       UserDetail interface 를 implement 하는 User 클래스를 사용함
+  
+  UserDetailsService interface (<-- MemberService 클래스에서 implements 해서 사용함)
+    ㄴ database 에서 회원 정보를 가져올 때 사용하는 interface
+       UserDetailsService interface 를 implement 하는 클래스를 사용해서
+       loadUserByUsername() 메소드를 구현함
+         ㄴ 회원 정보를 조회해서 
+            해당 회원의 정보와 권한을 갖는 UserDetail interface 구현체를 반환함
+            (UserDetail interface 를 implement 하는 User 클래스를 사용함)
+  
+  
+20240411 ~ 20240412
+  shop_lec04
+  
+  로그인, 로그아웃
+  로그인 상태와 로그아웃 상태에서 메뉴가 다르게 보이게 하기
+  로그인 상태더라도 USER / ADMIN 에 따라서 메뉴가 다르게 보이게 하기
+  권한별 접속 페이지 설정 (USER / ADMIN)
+
+
+20240412
+  shop_lec05
+  
+  
+  
+20240415
+  shop_lec06
+  
+  cascade=CascadeType.ALL : 영속성 전이 옵션
+                             ㄴ 부모 Entity 의 상태 변화를 자식 Entity 에도 적용함
+  
+  CascadeType.ALL : PERSIST, MERGE, REMOVE, REFRESH, DETACH  를 모두 포함함
+  
+  
+  orphanObjectRemoveTest() : 고아 객체 제거 테스트
+  
+   고아 객체 -   부모 Entiry 와 연결이 끊어진 자식 Entity
+  Orphan Object
+  
+  영속성 전이 옵션하고 고아 객체 제거 기능을 같이 사용하면
+  @OneToMany(...., cascade=CascadeType.ALL, orphanRemoval=true)
+   ㄴ 부모 Entity 를 제어해서 자식 Entity 의 생명 주기를 관리하게 됨
+      (Order Entity)               (OrderItem Entity)
+  
+  제한사항 : OrderItem Entity 를 Order Entity 가 아닌 다른 Entity 에서도
+             사용하고 있다면  <-- OrderItem 의 부모가 둘 이상인 경우
+             이 기능을 사용하면 안 됨
+             
+  
+ Auditing 기능 사용해서 공통 멤버변수(컬럼) 설정하기
+ 
+ 
+ 
+ 20240416
+   shop_lec07
+   
+   파일 업로드 설정을 위해서 
+   application.properties 파일에 기본 설정을 하고
+   
+   config 패키지에 
+   WebMvcConfigurer 인터페이스를 구현한 WebMvcConfig 클래스 작성하기
+      ㄴ addResourceHandlers 메소드를 overriding 함
+           ㄴ local system 에 upload 한 file 을 찾을 위치를 설정함
+   
+   
+   
+   
+ 
+ 
+ 
+ 
+ 
+ 
